@@ -36,9 +36,10 @@ For this task you will upload your solution to GitHub.
 ### a)
 Link to the repository: https://github.com/summer-murmuration/exeRcise-sheet-3
 
-b)  Push your code to this new repository by copying and executing the
-    snippet on github listed under
-    `…or push an existing repository from the command line`.
+### b)
+
+
+
 c)  Regularly push your latest changes to GitHub again and especially do
     so when you are finished with this sheet.
 
