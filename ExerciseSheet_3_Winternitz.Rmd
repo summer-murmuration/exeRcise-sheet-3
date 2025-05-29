@@ -26,11 +26,8 @@ Noted. Will commit the file after completion of each subtask.
 - Git has a rather steep learning curve.
 - Git is not great for storing data/ with large files.
 
-e)  Knit this exercise sheet. Some new files will automatically be
-    generated when knitting the sheet e.g. the HTML page. Ignore these
-    files, as we only want to track the source files themselves. You
-    can, but don't need to create a `.gitignore` file. Just do not
-    commit these files manually.
+### e)
+Knitted. 
 
 ## Exercise 2: Putting your Repository on GitHub (3 Points)
 
