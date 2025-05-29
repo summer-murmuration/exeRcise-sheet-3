@@ -37,11 +37,11 @@ For this task you will upload your solution to GitHub.
 Link to the repository: https://github.com/summer-murmuration/exeRcise-sheet-3
 
 ### b)
+Code pushed (through terminal).
 
 
-
-c)  Regularly push your latest changes to GitHub again and especially do
-    so when you are finished with this sheet.
+### c)
+Noted. I will regularly push the latest changes to GitHub, especially after finished with the sheet.
 
 ## Exercise 3: Pixar Films (4 Points)
 
