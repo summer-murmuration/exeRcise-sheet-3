@@ -45,20 +45,32 @@ Noted. I will regularly push the latest changes to GitHub, especially after fini
 
 ## Exercise 3: Pixar Films (4 Points)
 
-Download the `pixar_films` and `public_response` datasets from the
-GitHub repository and track them in git.
+### a)
 
-Link:
-<https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-03-11>
+```{r}
+library(tidyverse)
+#load dataset into R
+pixar_films <- read_csv("data/pixar_films.csv")
 
-For small datasets like these adding them to git is not a problem.
+#clean dataset by removing films w/o a title
+library(dplyr)
+pixar_films <- pixar_films%>% 
+  filter(!is.na(film))
 
-a)  Load the `pixar_films` dataset into R. Clean the dataset by removing
-    films without a title. Inspect the variable `film_rating`. What are
-    the possible values and what do they mean? Create a factor variable
-    for the film rating. Why is this appropriate?
+#Inspect variable film_rating
+unique(pixar_films$film_rating)
+```
+*film_rating*: the variable film_rating has, in this dataset, two values: G and PG (three films have N/A values for this variable). This refers to the Motion Picture Association film rating system. G means the film is rated for general audiences, and all ages are admitted. PG means that parental guidance is suggested, as some material may not be suitable for children.
 
-<!-- -->
+```{r}
+#Create a factor variable for the film rating:
+pixar_films$film_rating_asfactor <- factor(pixar_films$film_rating,
+                                         levels = c("G", "PG"),
+                                         ordered = TRUE)
+
+```
+*Why is this appropriate?* 
+The film rating system has a logical order, which means that "ordering" the variable (PG is more restricted than G) as a factor variable is useful for working further with this dataset. 
 
 b)  Inspect the film titles manually. Which films form a film series? A
     film series can be identified by a common word in the titles of the
