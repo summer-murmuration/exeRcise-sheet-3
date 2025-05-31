@@ -138,20 +138,64 @@ combined_films_response_df <- merge(pixar_films, public_response, by = "film", a
 ```
 
 
-d)  Choose one of the variables representing the public response and
-    create a bar plot for the films belonging to a series. Here are the
-    details of the plot:
+### d)
+```{r}
+#Create bar plot w/ (i) film series on x-axis, (ii) chosen variable on y-axis, (iii) each film as seperate bar, (iv) w/ bars grouped by series on x-axis and (v) bars ordered by release date of films; (vi) include title and axis labels.
 
-    -   The film series are represented on the x-axis.
-    -   Your chosen public response variable is displayed on the y-axis.
-    -   Each film in the series is represented as a separate bar. Bars
-        are grouped by film under their respective series on the x-axis.
-        Order the bars within a series according to the release date of
-        the films.
-    -   A title and axis labels for context.
+#load packages
+library(ggplot2)
+library(dplyr)
 
-    What do you notice when comparing the scores of the films in a
-    series? Do you see any patterns?
+#add series data to dataframe:
+combined_films_response_df_ws <- merge(combined_films_response_df, pixar_series_df, by = "film", all.x = TRUE)
+
+#filter for films in a series
+series_df <- combined_films_response_df_ws %>%
+  filter(!is.na(series)) %>% #remove films not in a series
+  arrange(series, release_date) %>% #arrange by release date; (v) fulfilled
+  mutate(film_order = factor(film, levels = unique(film)))
+
+#nested factor for the x axis
+series_df <- series_df %>%
+  mutate(nested_x = interaction(series, film, sep = "___"))
+#helps the axis understand which films belong to which series to create nested (two-level) axis labels.
+
+#create barplot
+ggplot(series_df, aes(x = film_order, y = rotten_tomatoes, fill = series)) + #film series on x axis (i), chosen variable on y axis (ii); (i) and (ii) fulfilled.
+  geom_col(width = 0.7) + #each film has a seperate, equally sized bar. (iii) fulfilled.
+  geom_text(aes(label = rotten_tomatoes), vjust = -0.5, size = 3) +
+  scale_fill_manual(values = c(
+    "Cars" = "darkred",
+    "Finding Nemo" = "#e85b26",
+    "Monsters" = "#9ab357",
+    "The Incredibles" = "#d52d12",
+    "Toy Story" = "#77c0e3"
+  )) +
+  scale_x_discrete(
+    guide = guide_axis_nested(
+      nested_levels = list(~series, ~film) #defines levels of nested axis
+    ),
+    labels = function(x) {
+      # Match x to film names
+      series_df$film[match(x, series_df$film_order)]
+    } #films grouped by series; nested axis allows both title and series to "coexist". (iv) fulfilled.
+  ) +
+  labs(title = "Rotten Tomatoes Scores by Pixar Film Series",
+       x = NULL,
+       y = "Rotten Tomatoes Score",
+       fill = "Series") + #labels; (vi) fulfilled.
+  theme_minimal() +
+  theme(
+    axis.text.x.top = element_text(size = 12, face = "bold", vjust = 0.5),
+    axis.text.x = element_text(size = 10, angle = 45, vjust = 1, hjust = 1),
+    axis.ticks.x = element_blank(),
+    legend.position = "bottom" #make sure the series are represented at the bottom, so it's easier to understand the plot
+  )
+```
+
+
+*What do you notice when comparing the scores of the films in a series? Do you see any patterns?*
+Generally, there is a trend that films after the first in the series perform worse in the Rotten Tomatoes score, meaning the score on average declines for new films in the series, in some series (Cars) more drastically than others (Toy Story).
 
 ## Exercise 4: Open Analysis (4 points)
 
