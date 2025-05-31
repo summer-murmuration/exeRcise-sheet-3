@@ -72,12 +72,46 @@ pixar_films$film_rating_asfactor <- factor(pixar_films$film_rating,
 *Why is this appropriate?* 
 The film rating system has a logical order, which means that "ordering" the variable (PG is more restricted than G) as a factor variable is useful for working further with this dataset. 
 
-b)  Inspect the film titles manually. Which films form a film series? A
-    film series can be identified by a common word in the titles of the
-    films, often in conjunction with a number in the title,
-    e.g. "Despicable Me" and "Despicable Me 2". Create a dataframe which
-    displays a list of the different series with the titles of the films
-    and how many films belong to the series. Output the dataframe.
+### b)
+*Which films form a film series?*
+- Toy Story (original, 2, 3, and 4)
+- Monsters, Inc and Monsters University
+- Finding Nemo and Finding Dory
+- Cars (original, 2, and 3)
+- The Incredibles (original and 2)
+
+```{r}
+#Create a data frame which displays a list of the different series with the titles of the films and how many films belong to the series.
+
+#Manually defining the film series:
+list_of_series <- list(
+  "Toy Story" = c("Toy Story", "Toy Story 2", "Toy Story 3", "Toy Story 4", "Lightyear"),
+  "Cars" = c("Cars", "Cars 2", "Cars 3"),
+  "Finding Nemo" = c("Finding Nemo", "Finding Dory"),
+  "The Incredibles" = c("The Incredibles", "Incredibles 2"),
+  "Monsters" = c("Monsters, Inc.", "Monsters University")
+)
+
+#Convert to a dataframe
+library(dplyr)
+
+pixar_series_df <- bind_rows(
+  lapply(names(list_of_series), function(series_name) {
+    films <- list_of_series[[series_name]]
+    data.frame(
+      series = series_name,
+      film = films,
+      n_films_in_series = length(films),
+      stringsAsFactors = FALSE
+    )
+  })
+)
+
+#Output the dataframe
+
+print(pixar_series_df, n=10)
+```
+
 
 c)  Load the `public_response` dataframe into R. Convert the
     `cinema_score` variable into a factor while ensuring the factor
