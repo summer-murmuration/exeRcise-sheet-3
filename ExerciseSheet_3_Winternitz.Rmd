@@ -47,7 +47,7 @@ Noted. I will regularly push the latest changes to GitHub, especially after fini
 
 ### a)
 
-```{r}
+```{r load pixar into R}
 library(tidyverse)
 #load dataset into R
 pixar_films <- read_csv("data/pixar_films.csv")
@@ -62,7 +62,7 @@ unique(pixar_films$film_rating)
 ```
 *film_rating*: the variable film_rating has, in this dataset, two values: G and PG (three films have N/A values for this variable). This refers to the Motion Picture Association film rating system. G means the film is rated for general audiences, and all ages are admitted. PG means that parental guidance is suggested, as some material may not be suitable for children.
 
-```{r}
+```{r film rating variable}
 #Create a factor variable for the film rating:
 pixar_films$film_rating_asfactor <- factor(pixar_films$film_rating,
                                          levels = c("G", "PG"),
@@ -80,7 +80,7 @@ The film rating system has a logical order, which means that "ordering" the vari
 - Cars (original, 2, and 3)
 - The Incredibles (original and 2)
 
-```{r}
+```{r dataframe creation}
 #Create a data frame which displays a list of the different series with the titles of the films and how many films belong to the series.
 
 #Manually defining the film series:
@@ -101,7 +101,7 @@ pixar_series_df <- bind_rows(
     data.frame(
       series = series_name,
       film = films,
-      n_films_in_series = length(films),
+      n_films_in_series = length(films), #creating no. of films in series variable
       stringsAsFactors = FALSE
     )
   })
@@ -114,7 +114,7 @@ print(pixar_series_df, n=10, na.print = "NA")
 
 
 ### c)  
-```{r}
+```{r load public response}
 #Load 'public_response' into R:
 library(tidyverse)
 public_response <- read_csv("data/public_response.csv")
@@ -124,7 +124,7 @@ public_response <- read_csv("data/public_response.csv")
 unique(public_response$cinema_score)
 #Only 3: A+, A, and A-
 
-score_levels <- c("A-", "A", "A+")
+score_levels <- c("A-", "A", "A+") #in order
 
 public_response$cinema_score <- factor(public_response$cinema_score,
                                        levels = score_levels,
@@ -139,11 +139,12 @@ combined_films_response_df <- merge(pixar_films, public_response, by = "film", a
 
 
 ### d)
-```{r}
+```{r bar plot}
 #Create bar plot w/ (i) film series on x-axis, (ii) chosen variable on y-axis, (iii) each film as seperate bar, (iv) w/ bars grouped by series on x-axis and (v) bars ordered by release date of films; (vi) include title and axis labels.
 
 #load packages
 library(ggplot2)
+library(ggh4x)
 library(dplyr)
 
 #add series data to dataframe:
@@ -172,7 +173,7 @@ ggplot(series_df, aes(x = film_order, y = rotten_tomatoes, fill = series)) + #fi
     "Toy Story" = "#77c0e3"
   )) +
   scale_x_discrete(
-    guide = guide_axis_nested(
+    guide = guide_axis_nested( #I did some research on how I might best display multiple tidbits of information on one axis, and ended up finding this function within the ggplot "universe" (extension ggh4x)
       nested_levels = list(~series, ~film) #defines levels of nested axis
     ),
     labels = function(x) {
@@ -262,7 +263,7 @@ ggplot(data = yr_avg_long, aes(
   x = Year,
   y = average_age,
   color = Gender)) +
-    geom_line(linewidth = 1.2) +
+    geom_line(linewidth = 1.2) + #allows us to see differences in gender graphically
   scale_color_manual(values = c("Men" = "darkblue", "Women" = "deeppink3")) +
     labs(
       title = "Average Age at Marriage, Over Time, by Gender",
@@ -273,7 +274,6 @@ ggplot(data = yr_avg_long, aes(
     theme_minimal()
 ```
 
-```markdown
-In Figure \@ref(fig:createplot), the average age at marriage is displayed in two lines, seperated by gender. It shows how this trend has developed over time.
+In Figure 1, the average age at marriage is displayed in two lines, separated by gender. It shows how this trend has developed over time.
 
 
