@@ -208,10 +208,11 @@ Dataset downloaded, tracked in git.
 -   Dataset Name: Estimated average age at marriage, by gender (UN and OECD)
 -   Link: <https://github.com/owid/owid-datasets/tree/master/datasets/Estimated%20average%20age%20at%20marriage%2C%20by%20gender%20(UN%20and%20OECD)>
 
-d)  Come up with a (research) question you want to answer with the data
-    and briefly explain why you believe this is an interesting question
-    within one sentence. It should be a question that can be answered
-    with the dataset and using R.
+### d)
+*Reasearch questions*: How has the average age at marriage developed over time, for both men and women, around the world?
+
+This question interests me because I want to see if the "gap" in average age at marriage between men and women has started to decline, or if it remains as both men and women tend to get married later in the modern world.
+
 e)  Use R to answer your chosen question. Please limit your analysis to
     the functions and techniques we have covered so far in the course.
     You are **not expected** to use advanced statistical models or
