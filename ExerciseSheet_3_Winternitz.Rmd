@@ -109,7 +109,7 @@ pixar_series_df <- bind_rows(
 
 #Output the dataframe
 
-print(pixar_series_df, n=10)
+print(pixar_series_df, n=10, na.print = "NA")
 ```
 
 
@@ -213,15 +213,67 @@ Dataset downloaded, tracked in git.
 
 This question interests me because I want to see if the "gap" in average age at marriage between men and women has started to decline, or if it remains as both men and women tend to get married later in the modern world.
 
-e)  Use R to answer your chosen question. Please limit your analysis to
-    the functions and techniques we have covered so far in the course.
-    You are **not expected** to use advanced statistical models or
-    external packages which haven't been introduced.
-f)  Create a meaningful plot / figure with the dataset. Make sure to
-    provide a figure caption (via the chunk options / Rmarkdown) and
-    correctly label the figure.
+### e), f)
+*Note*: as my question is best answered graphically, I will work on answering it for both subtasks 4e) and 4f).
 
-## Final Note
+```{r data wrangling}
+library(tidyverse)
+library(dplyr)
 
-Make sure to push all your commits and changes to GitHub before
-submitting the exercise sheet.
+
+#load dataset into R
+marriage_data <- read_csv("data/marriage_data.csv")
+
+#I'm interested in yearly averages over time, so I need to get a new dataframe where I have yearly averages, seperated by gender.
+#First, though, I want to make sure that I only use data where a country had data for both men and women available:
+marriage_cleaned <- marriage_data %>%
+  filter(!is.na(`Estimated average age at marriage, women`), !is.na(`Estimated average age at marriage, men`))
+
+#Now, to calculate yearly averages; cleaning should have removed any na values, but I am keeping the na.rm redundancy as a 'failsafe', considering the dataset is large.
+yearly_avg_by_gender <- marriage_cleaned %>%
+  group_by(Year) %>%
+  summarise(
+    avg_age_women = round(mean(`Estimated average age at marriage, women`, na.rm = TRUE), 2),
+    avg_age_men = round(mean(`Estimated average age at marriage, men`, na.rm = TRUE), 2)
+  )
+
+#Okay, but I need to do a bit work so that I can create the plot I have in mind to answer my question. Namely, I want two lines by gender; I have to make the data longer.
+yr_avg_long <- yearly_avg_by_gender %>%
+  pivot_longer(
+    cols = c(avg_age_women, avg_age_men),
+    names_to = "Gender",
+    values_to = "average_age"
+  )
+  
+#To make the legend more legible, I want to rename the values of "Gender":
+yr_avg_long <- yr_avg_long %>%
+  mutate(Gender = recode(Gender,
+                         "avg_age_men" = "Men",
+                         "avg_age_women" = "Women"))
+
+#Now I have my data properly in order, I will create a plot. I want to do this in another chunk so that I can provide a figure caption!
+```
+
+```{r createplot, fig.cap="Average age at marriage over time by gender"}
+library(ggplot2)
+library(bookdown)
+
+ggplot(data = yr_avg_long, aes(
+  x = Year,
+  y = average_age,
+  color = Gender)) +
+    geom_line(linewidth = 1.2) +
+  scale_color_manual(values = c("Men" = "darkblue", "Women" = "deeppink3")) +
+    labs(
+      title = "Average Age at Marriage, Over Time, by Gender",
+      x = "Year",
+      y = "Average Age",
+      color = "Gender"
+    ) +
+    theme_minimal()
+```
+
+```markdown
+In Figure \@ref(fig:createplot), the average age at marriage is displayed in two lines, seperated by gender. It shows how this trend has developed over time.
+
+
